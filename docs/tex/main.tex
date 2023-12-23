@@ -1,0 +1,600 @@
+\documentclass{bmstu}
+
+
+
+\usepackage{listings}
+\usepackage{xcolor}
+
+% Настройка стиля листингов
+% \lstset{
+%   basicstyle=\ttfamily\footnotesize,
+%   language=SQL, % Язык программирования
+%   backgroundcolor=\color{white}, % Цвет фона
+%   commentstyle=\color{green}, % Стиль комментариев
+%   keywordstyle=\color{blue}, % Стиль ключевых слов
+%   numberstyle=\tiny\color{black}, % Стиль номеров строк
+%   numbers=left, % Размещение номеров строк
+%   frame=single, % Обрамление листинга
+%   breaklines=true, % Разрыв длинных строк
+%   tabsize=4, % Размер табуляции
+% }
+
+
+\lstset{
+    basicstyle=\ttfamily\footnotesize, % Основной стиль шрифта и размер
+    commentstyle=\color{green}, % Стиль комментариев
+    keywordstyle=\color{blue}, % Стиль ключевых слов
+    numbers=left, % Показывать номера строк слева
+    numbersep=3mm, % Отступ номеров строк
+    numberstyle=\scriptsize, % Размер номеров строк
+    breaklines=true, % Разрешить автоматический перенос строк
+    frame=single, % Отображать рамку вокруг листинга
+    rulecolor=\color{black}, % Цвет рамки
+    showstringspaces=false, % Не отображать пробелы в строках
+}
+
+\bibliography{lib.bib}
+
+\begin{document}
+
+\makecourseworktitle
+{Информатика и системы управления (ИУ)}
+{Программное обеспечение ЭВМ и информационные технологии (ИУ7)}
+{Разработка статического сервера}
+{И. О. Артемьев/ИУ7-75Б}
+{Н. О. Яковидис}
+{}
+{}
+{}
+
+\chapter*{РЕФЕРАТ}
+
+В рамках данной курсовой работы был реализован статик-сервер.
+
+Ключевые слова: статик-сервер, prefork, select, http.
+
+Рассчетно-пояснительная записка к курсовой работе содержит \begin{NoHyper}\pageref{LastPage}\end{NoHyper} страниц, \totfig~иллюстраций, 4 источника.
+
+\clearpage
+
+\maketableofcontents
+
+% \chapter{Аналитическая часть}
+
+% Шифровальная машина <<Энигма>> состоит из трех основных частей:
+% \begin{itemize}
+%     \item роторы --- диски обладающие 26 гранями, где каждая грань представляла собой нумерацию английского алфавита;
+%     \item рефлектор --- статический механизм, позволящий машине также расшифровать текст;
+%     \item коммутатор --- набор парных шифров.
+% \end{itemize}
+
+% \section{Алгоритм работы машины}
+
+% На вход <<Энигме>> подается строка, которая разбивается на символы. 
+% Далее символ проходит через коммутационную панель, который меняет символ в соотвествии с настройкой.
+% После прохождения панели, символ проходит через три диска и попадает на рефлектор.
+% После работы рефлектора, символ отправляется обратно на диске и оканчательно шифруется через коммутатор.
+% Затем один ротор совершает оборот, если ротор обернулся 26 раз, то поворачивается следующий.
+
+% \section{Анализ залупы}
+
+\chapter*{ВВЕДЕНИЕ}
+\addcontentsline{toc}{chapter}{ВВЕДЕНИЕ}
+
+Цель проекта состоит в создании статического веб-сервера, способного обрабатывать GET и HEAD запросы. 
+Статический веб-сервер –- это программное решение, предназначенное для обслуживания и 
+передачи статического контента по сети Интернет. Он обеспечивает доступ к различным ресурсам, 
+таким как HTML-страницы, изображения, таблицы стилей и другие, которые не генерируются 
+динамически на сервере.
+
+В свете развития веб-технологий статические веб-серверы становятся важными, обеспечивая надежную и 
+быструю обработку статических ресурсов. Они востребованы благодаря своей простоте и эффективности в 
+предоставлении пользователям быстрого доступа к статическим компонентам веб-приложений.
+
+Разработка статических веб-серверов включает в себя задачи по обеспечению безопасности, таких как 
+предотвращение выхода за пределы определенной директории. Потенциальные угрозы могут привести к 
+утечке конфиденциальных данных и другим негативным последствиям для сервера. В данной работе будет 
+уделено внимание методам обеспечения безопасности статического веб-сервера, включая контроль 
+доступа и предотвращение уязвимостей, связанных с управлением файловой системой сервера.
+
+Для достижения поставленной цели, предполагается выполнение следующих задач:
+
+\begin{itemize}
+	\item провести формализацию задачи и определить небоходимый функционал;
+	\item исследовать предметную область веб-серверов;
+	\item спроектировать приложение;
+	\item реализовать приложение;
+	\item протестировать приложение на предмет корректности.
+\end{itemize}
+
+\chapter{Аналитический раздел}
+
+\section{Требования к серверу}
+
+\begin{itemize}
+	\item поддержка запросов GET и HEAD (поддержка статусов 200, 403, 404);
+	\item ответ на неподдерживаемые запросы статусом 405;
+	\item выставление content type в зависимости от типа файла (поддержка .html, .css, .js, .png, .jpg, .jpeg, .swf, .gif);
+	\item корректная передача файлов размером в 100мб;
+	\item сервер по умолчанию должен возвращать html-страницу на выбранную тему с css-стилем;
+	\item учесть минимальные требования к безопасности статик-серверов (предусмотреть ошибку в случае если адрес будет выходить за root директорию сервера);
+	\item реализовать логгер;
+	\item использовать язык Си, сторонние библиотеки запрещены;
+	\item реализовать архитектуру prefork + select();
+	\item статик сервер должен работать стабильно.
+\end{itemize}
+
+\section{Протокол HTTP}
+
+Изучение современных веб-технологий требует глубокого понимания протокола HTTP (Hypertext Transfer Protocol). Этот стандарт является ключевым для взаимодействия между веб-клиентами и серверами, обеспечивая передачу данных в формате гипертекста. HTTP сыграл значительную роль в развитии интернета, служа основой для передачи ресурсов, таких как HTML-страницы, изображения и стили.
+
+Протокол HTTP основан на принципе запроса-ответа, где клиент отправляет запрос на сервер для получения определенного ресурса, и сервер отвечает соответствующим ответом. Этот обмен сообщениями основан на простых принципах и стандартах, обеспечивая эффективное взаимодействие между веб-клиентами и серверами.
+
+Существует несколько версий протокола HTTP, каждая из которых вносит улучшения и новшества. 
+В данном контексте выбран HTTP 1.1 из-за его возможности многократного использования соединений 
+(connection reuse). Эта характеристика позволяет снизить задержки при обмене данными, поскольку 
+соединение может быть переиспользовано для последующих запросов, экономя трафик и улучшая производительность \cite{tanenbaum2024}. 
+
+\section{Сокеты UNIX}
+
+Сетевые сокеты представляют собой универсальный механизм для обмена данными между процессами на одной машине или по сети. В контексте создания веб-сервера, использование сетевых сокетов становится ключевым элементом, обеспечивая взаимодействие между сервером и клиентами.
+
+Дуплексная связь, обеспечиваемая сетевыми сокетами, позволяет полнодуплексный обмен данными между сервером и клиентом. Это важный аспект в контексте веб-сервера, поскольку позволяет одновременно обрабатывать входящие и исходящие запросы, что способствует повышению производительности и отзывчивости сервера.
+
+Файловые сокеты, также известные как доменные сокеты UNIX, играют важную роль в локальной сетевой коммуникации. Они предоставляют способ для процессов обмениваться данными напрямую, обеспечивая эффективную и безопасную передачу информации между различными частями приложения.
+
+Выбор сетевых сокетов для реализации данного веб-сервера был обоснован их универсальностью и способностью обработки запросов как через сеть, так и локально. Сетевые сокеты обеспечивают надежное взаимодействие между сервером и клиентами, что является важным аспектом для корректной работы веб-сервера \cite{olifer2016}.
+
+\section{Вывод}
+
+На основании анализа были определены требования к статическому веб-серверу. Решение использовать протокол HTTP 1.1 было обосновано его возможностью эффективного переиспользования соединений. Также было обосновано предпочтение сетевым сокетам UNIX перед файловыми.
+
+\chapter{Конструкторский раздел}
+
+\section{HTTP-запросы}
+
+Запрос в протоколе HTTP представляет собой структурированный набор строк. 
+Начиная с первой строки, содержащей информацию о методе, URL и версии HTTP, 
+последующие строки содержат заголовки запроса, которые определяют дополнительные 
+параметры запроса. В некоторых случаях запрос может также содержать тело, которое 
+используется для передачи дополнительных данных для более сложных веб-запросов.
+
+\begin{lstlisting}[caption={Пример HTTP-запроса через Postman}, label=lst:http]
+GET /img/prison.jpeg HTTP/1.1
+User-Agent: PostmanRuntime/7.35.0
+Accept: */*
+Postman-Token: 7af874dc-5a4a-4678-a088-65bc9ca2b09e
+Host: localhost:5600
+Accept-Encoding: gzip, deflate, br
+Connection: keep-alive
+\end{lstlisting}
+
+
+\section{HTTP-ответы}
+
+Ответ в протоколе HTTP содержит информацию о версии HTTP, числовом представлении статуса, текстовом описании статуса, заголовках и теле ответа. Ответ может включать как текстовую, так и бинарную информацию. В случае передачи изображений или других бинарных файлов, которые требуется разбить на несколько буферов для эффективной передачи, особенно при больших размерах, данная операция выполняется с целью оптимизации передачи данных клиенту.
+
+\section{Асинхронность}
+Предлагается предоставить опцию использования серверной реализации, основанной на механизме prefork 
+в сочетании с select для обработки входящих подключений. Этот подход позволяет создать множество 
+процессов-обработчиков заранее (prefork) и использовать select для мониторинга активности сокетов и 
+эффективной обработки ввода-вывода.
+
+\section{Безопасность}
+
+Большое внимание уделяется обеспечению безопасности статического веб-сервера. Основной угрозой является 
+возможность несанкционированного доступа к файлам, расположенным за пределами директории, доступной для сервера.
+Для защиты от доступа за пределами статической директории предлагается использовать функцию realpath, которая помогает получить абсолютный путь к файлу или директории. Это позволяет проверить, что запрашиваемый путь принадлежит к пределам статической директории сервера и предотвратить доступ к файлам за ее пределами.
+
+\section{Вывод}
+В данном разделе были сформулированы требования к безопасности, асинхронности, формату запросов и ответов.
+
+\chapter{Технологический раздел}
+
+Этот раздел охватит технические детали реализации приложения и продемонстрирует работу программы.
+
+\section{Средства реализации}
+
+Для написания программы был выбран язык программирования Си, который был рекомендован преподавателем. Си 
+является низкоуровневым языком, обеспечивающим полный контроль над сокетами. Большую часть функционала 
+пришлось реализовать вручную.
+Для разработки программы использовалась среда Visual Studio Code \cite{vscode}.
+
+\section{Листинги кода}
+
+На листинге \ref{lst:server} представлена реализация алгоритма prefork + select.
+
+\begin{lstlisting}[caption={Механизм prefork + select}, label=lst:server]
+void start_server(void) {
+    int server_socket;
+    struct sockaddr_in server_addr;
+
+    if ((server_socket = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
+        perror("Socket creation failed");
+        exit(EXIT_FAILURE);
+    }
+
+    server_addr.sin_family = AF_INET;
+    server_addr.sin_addr.s_addr = INADDR_ANY;
+    server_addr.sin_port = htons(PORT);
+
+    if (bind(server_socket, (struct sockaddr*)&server_addr, sizeof(server_addr)) == -1) {
+        perror("Bind failed");
+        exit(EXIT_FAILURE);
+    }
+
+    if (listen(server_socket, SOMAXCONN) == -1) {
+        perror("Listen failed");
+        exit(EXIT_FAILURE);
+    }
+
+    log_message(LOG_INFO, "Server listening on port %d...\n", PORT);
+
+    for (int i = 0; i < NUM_CHILDREN; ++i) {
+        pid_t pid = fork();
+
+        if (pid == 0) {
+            int client_sockets[MAX_CLIENTS] = { 0 };
+            int max_fd, activity, addr_len, client_socket;
+            struct sockaddr_in client_addr;
+            fd_set readfds;
+
+            while (1) {
+                FD_ZERO(&readfds);
+                FD_SET(server_socket, &readfds);
+
+                max_fd = server_socket;
+
+                for (int j = 0; j < MAX_CLIENTS; ++j) {
+                    if (client_sockets[j] > 0) {
+                        FD_SET(client_sockets[j], &readfds);
+                        if (client_sockets[j] > max_fd) {
+                            max_fd = client_sockets[j];
+                        }
+                    }
+                }
+
+                activity = select(max_fd + 1, &readfds, NULL, NULL, NULL); 
+                if ((activity < 0) && (errno != EINTR)) {
+                    perror("Select error");
+                    exit(EXIT_FAILURE);
+                }
+
+                if (FD_ISSET(server_socket, &readfds)) {
+                    addr_len = sizeof(client_addr);
+                    if ((client_socket = accept(server_socket, (struct sockaddr*)&client_addr, (socklen_t*)&addr_len)) == -1) {
+                        perror("Accept failed");
+                        continue;
+                    }
+
+                    printf("New connection, socket fd is %d, ip is : %s, port : %d\n", client_socket,
+                        inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
+
+                    for (int j = 0; j < MAX_CLIENTS; ++j) {
+                        if (client_sockets[j] == 0) {
+                            client_sockets[j] = client_socket;
+                            break;
+                        }
+                    }
+                }
+
+                for (int j = 0; j < MAX_CLIENTS; ++j) {
+                    if (client_sockets[j] > 0 && FD_ISSET(client_sockets[j], &readfds)) {
+                        handle_client(client_sockets[j]);
+                        close(client_sockets[j]);
+                        client_sockets[j] = 0;
+                    }
+                }
+            }
+        }
+        else if (pid > 0) {
+        }
+        else {
+            perror("Fork failed");
+            exit(EXIT_FAILURE);
+        }
+    }
+
+    for (int i = 0; i < NUM_CHILDREN; ++i) {
+        wait(NULL);
+    }
+}
+\end{lstlisting}
+
+На листинге \ref{lst:request} представлена функция обработки HTTP-запроса, парсинг его и проверка на валидность.
+
+\begin{lstlisting}[caption={Обработка и парсинг HTTP-запроса}, label=lst:request]
+void handle_client(int client_socket) {
+    char buffer[1024];
+    char method[10], path[PATH_MAX], protocol[10];
+
+    if (recv(client_socket, buffer, sizeof(buffer), 0) <= 0) {
+        perror("Receive failed");
+        return;
+    }
+
+    sscanf(buffer, "%s %s %s", method, path, protocol);
+
+    if (strcmp(method, "GET") != 0 && strcmp(method, "HEAD") != 0) {
+        send_error(client_socket, METHOD_NOT_ALLOWED);
+        return;
+    }
+
+    char full_path[PATH_MAX];
+    sprintf(full_path, "%s%s", STATIC_ROOT, path);
+
+    char resolved_path[PATH_MAX];
+    if (realpath(full_path, resolved_path) == NULL) {
+        send_error(client_socket, NOT_FOUND);
+        return;
+    }
+    if (strncmp(resolved_path, STATIC_ROOT, strlen(STATIC_ROOT)) != 0) {
+        send_error(client_socket, FORBIDDEN);
+        return;
+    }
+
+    if (strcmp(path, "/") == 0) {
+        strcat(full_path, "index.html");
+    }
+
+    struct stat path_stat;
+    if (stat(full_path, &path_stat) == 0 && S_ISDIR(path_stat.st_mode)) {
+        if (path[strlen(path) - 1] != '/') { strcat(path, "/"); }
+        send_directory_listing(client_socket, path, full_path);
+        return;
+    }
+
+    send_file(client_socket, full_path, method);
+}
+\end{lstlisting}
+
+На листинге \ref{lst:response} представлены функции обработки HTTP-ответов. Составление хедера и тела ответа в зависимости от ситуации.
+
+\begin{lstlisting}[caption={Обработка HTTP-ответов}, label=lst:response]
+void send_directory_listing(int client_socket, const char* current_path, const char* directory_path) {
+    DIR* directory = opendir(directory_path);
+    if (directory == NULL) {
+        send_error(client_socket, NOT_FOUND);
+        return;
+    }
+
+    char headers[1024];
+    sprintf(headers, "HTTP/1.1 200 OK\r\nContent-Type: text/html\r\n\r\n");
+    send(client_socket, headers, strlen(headers), 0);
+
+    char buffer[1024];
+    sprintf(buffer, "<html><head><title>Directory Listing</title></head><body><h1>Directory Listing</h1><ul>");
+
+    struct dirent* dir_entry;
+    while ((dir_entry = readdir(directory)) != NULL) {
+        if (strcmp(dir_entry->d_name, ".") == 0) { continue; }
+
+        char full_entry_path[255];
+        sprintf(full_entry_path, "%s/%s", directory_path, dir_entry->d_name);
+
+        struct stat path_stat;
+        if (stat(full_entry_path, &path_stat) == 0 && S_ISDIR(path_stat.st_mode)) {
+            sprintf(buffer + strlen(buffer), "<li><a href=\"%s%s/\">%s/</a></li>", current_path, dir_entry->d_name, dir_entry->d_name);
+        }
+        else {
+            sprintf(buffer + strlen(buffer), "<li><a href=\"%s%s\">%s</a></li>", current_path, dir_entry->d_name, dir_entry->d_name);
+        }
+    }
+
+    strcat(buffer, "</ul></body></html>");
+
+    send(client_socket, buffer, strlen(buffer), 0);
+
+    closedir(directory);
+}
+
+void send_file(int client_socket, const char* file_path, const char* method) {
+    FILE* file = fopen(file_path, "rb");
+    if (file == NULL) {
+        send_error(client_socket, NOT_FOUND);
+        return;
+    }
+
+    fseek(file, 0, SEEK_END);
+    long file_size = ftell(file);
+    fseek(file, 0, SEEK_SET);
+
+    char headers[1024];
+    sprintf(headers, "HTTP/1.1 200 OK\r\nContent-Length: %ld\r\n", file_size);
+
+    const char* content_type = "text/plain";
+    const char* file_ext = strrchr(file_path, '.');
+    if (file_ext != NULL) {
+        if (strcmp(file_ext, ".html") == 0) {
+            content_type = "text/html";
+        }
+        else if (strcmp(file_ext, ".css") == 0) {
+            content_type = "text/css";
+        }
+        else if (strcmp(file_ext, ".js") == 0) {
+            content_type = "application/javascript";
+        }
+        else if (strcmp(file_ext, ".png") == 0) {
+            content_type = "image/png";
+        }
+        else if (strcmp(file_ext, ".jpg") == 0 || strcmp(file_ext, ".jpeg") == 0) {
+            content_type = "image/jpeg";
+        }
+        else if (strcmp(file_ext, ".swf") == 0) {
+            content_type = "application/x-shockwave-flash";
+        }
+        else if (strcmp(file_ext, ".gif") == 0) {
+            content_type = "image/gif";
+        }
+    }
+
+    sprintf(headers + strlen(headers), "Content-Type: %s\r\n\r\n", content_type);
+
+
+    send(client_socket, headers, strlen(headers), 0);
+
+    if (strcmp(method, "HEAD") == 0) {
+        fclose(file);
+        return;
+    }
+
+    char buffer[1024];
+    size_t bytes_read;
+    while ((bytes_read = fread(buffer, 1, sizeof(buffer), file)) > 0) {
+        send(client_socket, buffer, bytes_read, 0);
+    }
+
+    fclose(file);
+}
+
+void send_error(int client_socket, int status_code) {
+    char response[1024];
+    sprintf(response, "HTTP/1.1 %d\r\nContent-Length: 0\r\nContent-Type: text/html\r\n\r\n", status_code);
+
+    log_message(LOG_INFO, "ERROR %s", response);
+    log_message(LOG_DEBUG, "Debug message: %d", 42);
+    // log_message(LOG_WARNING, "Something unexpected happened!");
+    // log_message(LOG_ERROR, "Error occurred: %s", "File not found");
+
+    send(client_socket, response, strlen(response), 0);
+    // log_message("Sent forbidden error response to client");
+}
+\end{lstlisting}
+
+На листинге \ref{lst:logger} представлена кастомная функция для логирования сервера и вывода всех логов в специально отведенный файл.
+
+\begin{lstlisting}[caption={Логгер}, label=lst:logger]
+void log_message(LogLevel level, const char* format, ...) {
+    time_t rawtime;
+    struct tm* timeinfo;
+    time(&rawtime);
+    timeinfo = localtime(&rawtime);
+    LogLevel current_log_level = LOG_LEVEL;
+
+    if (level > current_log_level) { return; }
+
+    FILE* log_file = fopen(LOG_FILE, "a");
+    if (log_file == NULL) {
+        perror("Error opening log file");
+        return;
+    }
+
+    char time_str[50];
+    strftime(time_str, sizeof(time_str), "[%Y-%m-%d %H:%M:%S]", timeinfo);
+
+    va_list args;
+    va_start(args, format);
+
+    fprintf(log_file, "%s ", time_str);
+
+    switch (level) {
+    case LOG_DEBUG:
+        fprintf(log_file, "[DEBUG] ");
+        break;
+    case LOG_INFO:
+        fprintf(log_file, "[INFO] ");
+        break;
+    case LOG_WARNING:
+        fprintf(log_file, "[WARNING] ");
+        break;
+    case LOG_ERROR:
+        fprintf(log_file, "[ERROR] ");
+        break;
+    }
+
+    vfprintf(log_file, format, args);
+
+    va_end(args);
+    fclose(log_file);
+}
+\end{lstlisting}
+
+\section{Демонстрация работы программы}
+
+На рисунке \ref{img:index} показана работа home директории сервера. Сервер посвящен тематике капибар и мемам с ними.
+
+\imgs{index}{h!}{0.24}{index.html}
+\clearpage
+
+На рисунке \ref{img:directory} показано корректное отображение списка файлов в запрашиваемой директории.
+
+\imgs{directory}{h!}{0.24}{Директория img}
+
+На рисунке \ref{img:meme} показана отдача фото с сервера.
+
+\imgs{meme}{h!}{0.24}{Мем с капибарой}
+
+\section{Вывод}
+
+Был реализован статик-сервер на языке Си, а также проведены проверки его функционала.
+
+\chapter{Исследовательский раздел}
+
+\section{Описание эксперимента}
+В ходе исследования было выполнено нагрузочное тестирование разработанного статик-сервера и nginx с использованием программы 
+ali \cite{ali}. Тестирование было направлено на проверку отправки запросов к index.html.
+
+\section{Результаты эксперимента}
+На рисунках \ref{img:100 my} -- \ref{img:1000 nginx} рассматривались сценарии 100, 500 и 1000 запросов пользователей каждую секунду в течение 5 секунд.
+
+\imgs{100 my}{h!}{0.47}{100 запросов в секунду к index.html на моем сервере}
+\imgs{100 nginx}{h!}{0.47}{100 запросов в секунду к index.html на nginx сервере}
+\imgs{500 my}{h!}{0.47}{500 запросов в секунду к index.html на моем сервере}
+\imgs{500 nginx}{h!}{0.47}{500 запросов в секунду к index.html на nginx сервере}
+\imgs{1000 my}{h!}{0.47}{1000 запросов в секунду к index.html на моем сервере}
+\imgs{1000 nginx}{h!}{0.47}{1000 запросов в секунду к index.html на nginx сервере}
+\clearpage
+
+\section{Вывод}
+Проведено тестирование разработанного статик-сервера и nginx, в ходе которого выявлено, что nginx работает эффективнее.
+
+
+\chapter*{ЗАКЛЮЧЕНИЕ}
+\addcontentsline{toc}{chapter}{ЗАКЛЮЧЕНИЕ}
+
+В процессе выполнения курсовой работы был выполнен анализ предметной области, 
+выделены требования к разрабатываемому приложению. Было разработано приложение, 
+которое прошло успешное тестирование на корректность работы программы. Также 
+были проведены тесты на нагрузку для оценки поведения приложения при высокой нагрузке.
+
+При написании данной работы:
+
+\begin{itemize}
+	\item проведена формализация задачи и определен необходимый функционал;
+	\item исследована предметная область веб-серверов;
+	\item спроектировано приложение;
+	\item реализовано приложение;
+	\item приложение протестировано на предмет корректности.
+\end{itemize}
+
+Таким образом, поставленные задачи были выполнены, цель курсовой работы работы была достигнута.
+
+% \begin{thebibliography}{9} % Обычно используются однозначные числа, чтобы уместить до 9 источников
+%     \bibitem{label1} Автор1. Название1. Издание1. Год1.
+%     \bibitem{label2} Автор2. Название2. Издание2. Год2.
+%     % Добавьте больше элементов в формате \bibitem{label} ...
+    
+%     \end{thebibliography}
+
+\clearpage
+\makebibliography
+
+
+% 3 ms дефолт
+% 1 ms индексы
+% 0.09 ms материализованная вьюха
+% 3.5 ms предвыборка
+
+% \include{01-definitions}
+% \include{02-abbreviations}
+
+% \include{03-introduction}
+% \include{04-analysis}
+% \include{05-design}
+% \include{06-implementation}
+% \include{07-research}
+% \include{08-conclusion}
+
+% \include{09-appendix}
+
+\end{document}

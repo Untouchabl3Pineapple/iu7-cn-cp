@@ -1,0 +1,270 @@
+[2023-12-12 21:48:003 [INFO] ERROR HTTP/1.1 404 Not Found
+Content-Length: 0
+Content-Type: text/html
+
+
+[2023-12-12 21:48:003 [DEBUG] Debug message: 42
+[2023-12-12 21:48:123 [INFO] ERROR HTTP/1.1 404 Not Found
+Content-Length: 0
+Content-Type: text/html
+
+
+[2023-12-12 21:48:123] [DEBUG] Debug message: 42
+[2023-12-12 21:50:283 [INFO] ERROR HTTP/1.1 404 Not Found
+Content-Length: 0
+Content-Type: text/html
+
+
+[2023-12-12 21:50:283 [DEBUG] Debug message: 42
+[2023-12-12 21:50:313 [INFO] ERROR HTTP/1.1 404 Not Found
+Content-Length: 0
+Content-Type: text/html
+
+
+[2023-12-12 21:50:313 [DEBUG] Debug message: 42
+[2023-12-12 21:52:07b [INFO] ERROR HTTP/1.1 404 Not Found
+Content-Length: 0
+Content-Type: text/html
+
+
+[2023-12-12 21:52:30b [DEBUG] Debug message: 42
+[2023-12-12 21:52:19b [INFO] ERROR HTTP/1.1 404 Not Found
+Content-Length: 0
+Content-Type: text/html
+
+
+[2023-12-12 21:52:30b [DEBUG] Debug message: 42
+[2023-12-12 21:52:31b [INFO] ERROR HTTP/1.1 404 Not Found
+Content-Length: 0
+Content-Type: text/html
+
+
+[2023-12-12 21:52:31b [DEBUG] Debug message: 42
+[2023-12-12 21:52:32b [INFO] ERROR HTTP/1.1 404 Not Found
+Content-Length: 0
+Content-Type: text/html
+
+
+[2023-12-12 21:52:32b [DEBUG] Debug message: 42
+[2023-12-12 21:53:51Õ [INFO] ERROR HTTP/1.1 404 Not Found
+Content-Length: 0
+Content-Type: text/html
+
+
+[2023-12-12 21:53:52Õ [DEBUG] Debug message: 42
+[2023-12-12 21:54:05Õ [INFO] ERROR HTTP/1.1 404 Not Found
+Content-Length: 0
+Content-Type: text/html
+
+
+[2023-12-12 21:54:21Õ [DEBUG] Debug message: 42
+[2023-12-12 21:54:23Õ [INFO] ERROR HTTP/1.1 404 Not Found
+Content-Length: 0
+Content-Type: text/html
+
+
+[2023-12-12 21:54:23Õ [DEBUG] Debug message: 42
+[2023-12-12 21:54:23Õ [INFO] ERROR HTTP/1.1 404 Not Found
+Content-Length: 0
+Content-Type: text/html
+
+
+[2023-12-12 21:54:23Õ [DEBUG] Debug message: 42
+[2023-12-12 21:54:27Õ [INFO] ERROR HTTP/1.1 404 Not Found
+Content-Length: 0
+Content-Type: text/html
+
+
+[2023-12-12 21:54:27Õ [DEBUG] Debug message: 42
+[2023-12-12 22:10:49Û [INFO] ERROR HTTP/1.1 404 Not Found
+Content-Length: 0
+Content-Type: text/html
+
+
+[2023-12-12 22:11:09Û [INFO] ERROR HTTP/1.1 404 Not Found
+Content-Length: 0
+Content-Type: text/html
+
+
+[2023-12-12 22:11:10Û [INFO] ERROR HTTP/1.1 404 Not Found
+Content-Length: 0
+Content-Type: text/html
+
+
+[2023-12-12 22:14:58] [INFO] ERROR HTTP/1.1 404 Not Found
+Content-Length: 0
+Content-Type: text/html
+
+
+[2023-12-12 22:22:39] [INFO] ERROR HTTP/1.1 404 Not Found
+Content-Length: 0
+Content-Type: text/html
+
+
+[2023-12-12 22:22:39] [DEBUG] Debug message: 42
+[2023-12-12 22:22:48] [INFO] ERROR HTTP/1.1 404 Not Found
+Content-Length: 0
+Content-Type: text/html
+
+
+[2023-12-12 22:22:48] [DEBUG] Debug message: 42
+[2023-12-12 22:23:33] [INFO] ERROR HTTP/1.1 404 Not Found
+Content-Length: 0
+Content-Type: text/html
+
+
+[2023-12-12 22:23:33] [DEBUG] Debug message: 42
+[2023-12-12 22:25:01] [INFO] ERROR HTTP/1.1 404 Not Found
+Content-Length: 0
+Content-Type: text/html
+
+
+[2023-12-12 22:25:01] [DEBUG] Debug message: 42
+[2023-12-12 22:36:10] [INFO] ERROR HTTP/1.1 405 Method Not Allowed
+Content-Length: 0
+Content-Type: text/html
+
+
+[2023-12-12 22:36:10] [DEBUG] Debug message: 42
+[2023-12-12 23:50:28] [INFO] ERROR HTTP/1.1 405 Method Not Allowed
+Content-Length: 0
+Content-Type: text/html
+
+
+[2023-12-12 23:50:28] [DEBUG] Debug message: 42
+[2023-12-12 23:55:35] [INFO] Server listening on port 5600...
+
+[2023-12-12 23:55:52] [INFO] Server listening on port 5600...
+
+[2023-12-12 23:56:50] [INFO] Server listening on port 5600...
+[2023-12-12 23:57:12] [INFO] ERROR HTTP/1.1 404 Not Found
+Content-Length: 0
+Content-Type: text/html
+
+[2023-12-12 23:57:12] [DEBUG] Debug message: 42[2023-12-13 00:02:52] [INFO] Server listening on port 5600...
+[2023-12-13 00:02:57] [INFO] ERROR HTTP/1.1 405 
+Content-Length: 0
+Content-Type: text/html
+
+[2023-12-13 00:02:57] [DEBUG] Debug message: 42[2023-12-13 00:05:21] [INFO] Server listening on port 5600...
+[2023-12-13 00:05:23] [INFO] ERROR HTTP/1.1 
+Content-Length: 0
+Content-Type: text/html
+
+[2023-12-13 00:05:23] [DEBUG] Debug message: 42[2023-12-13 00:06:13] [INFO] Server listening on port 5600...
+[2023-12-13 00:06:16] [INFO] ERROR HTTP/1.1 405
+Content-Length: 0
+Content-Type: text/html
+
+[2023-12-13 00:06:16] [DEBUG] Debug message: 42[2023-12-13 00:06:58] [INFO] ERROR HTTP/1.1 404
+Content-Length: 0
+Content-Type: text/html
+
+[2023-12-13 00:06:58] [DEBUG] Debug message: 42[2023-12-13 00:07:55] [INFO] ERROR HTTP/1.1 404
+Content-Length: 0
+Content-Type: text/html
+
+[2023-12-13 00:07:55] [DEBUG] Debug message: 42[2023-12-13 00:08:01] [INFO] ERROR HTTP/1.1 404
+Content-Length: 0
+Content-Type: text/html
+
+[2023-12-13 00:08:01] [DEBUG] Debug message: 42[2023-12-13 00:08:47] [INFO] ERROR HTTP/1.1 404
+Content-Length: 0
+Content-Type: text/html
+
+[2023-12-13 00:08:47] [DEBUG] Debug message: 42[2023-12-13 00:12:25] [INFO] Server listening on port 5600...
+[2023-12-13 00:20:53] [INFO] ERROR HTTP/1.1 404
+Content-Length: 0
+Content-Type: text/html
+
+[2023-12-13 00:20:53] [DEBUG] Debug message: 42[2023-12-13 00:20:54] [INFO] ERROR HTTP/1.1 404
+Content-Length: 0
+Content-Type: text/html
+
+[2023-12-13 00:20:54] [DEBUG] Debug message: 42[2023-12-13 00:23:39] [INFO] Server listening on port 5600...
+[2023-12-13 18:21:09] [INFO] Server listening on port 5600...
+[2023-12-13 18:24:53] [INFO] Server listening on port 5600...
+[2023-12-13 18:26:32] [INFO] Server listening on port 5600...
+[2023-12-13 18:44:37] [INFO] Server listening on port 5600...
+[2023-12-13 18:57:34] [INFO] Server listening on port 5600...
+[2023-12-13 19:00:28] [INFO] Server listening on port 5600...
+[2023-12-13 19:02:43] [INFO] Server listening on port 5600...
+[2023-12-13 19:05:33] [INFO] Server listening on port 5600...
+[2023-12-13 19:08:34] [INFO] Server listening on port 5600...
+[2023-12-13 19:09:27] [INFO] ERROR HTTP/1.1 404
+Content-Length: 0
+Content-Type: text/html
+
+[2023-12-13 19:09:27] [DEBUG] Debug message: 42[2023-12-13 19:22:53] [INFO] Server listening on port 5600...
+[2023-12-13 19:23:01] [INFO] ERROR HTTP/1.1 404
+Content-Length: 0
+Content-Type: text/html
+
+[2023-12-13 19:23:01] [DEBUG] Debug message: 42[2023-12-13 19:24:03] [INFO] Server listening on port 5600...
+[2023-12-13 19:26:42] [INFO] Server listening on port 5600...
+[2023-12-13 19:40:38] [INFO] Server listening on port 5600...
+[2023-12-13 20:35:24] [INFO] Server listening on port 5600...
+[2023-12-13 20:43:26] [INFO] ERROR HTTP/1.1 404
+Content-Length: 0
+Content-Type: text/html
+
+[2023-12-13 20:43:26] [DEBUG] Debug message: 42[2023-12-13 20:43:26] [INFO] ERROR HTTP/1.1 404
+Content-Length: 0
+Content-Type: text/html
+
+[2023-12-13 20:43:26] [INFO] ERROR HTTP/1.1 404
+Content-Length: 0
+Content-Type: text/html
+
+[2023-12-13 20:43:26] [INFO] ERROR HTTP/1.1 404
+Content-Length: 0
+Content-Type: text/html
+
+[2023-12-13 20:43:26] [DEBUG] Debug message: 42[2023-12-13 20:43:26] [INFO] ERROR HTTP/1.1 404
+Content-Length: 0
+Content-Type: text/html
+
+[2023-12-13 20:43:26] [DEBUG] Debug message: 42[2023-12-13 20:43:26] [INFO] ERROR HTTP/1.1 404
+Content-Length: 0
+Content-Type: text/html
+
+[2023-12-13 20:43:26] [DEBUG] Debug message: 42[2023-12-13 20:43:26] [INFO] ERROR HTTP/1.1 404
+Content-Length: 0
+Content-Type: text/html
+
+[2023-12-13 20:43:26] [DEBUG] Debug message: 42[2023-12-13 20:43:26] [INFO] ERROR HTTP/1.1 404
+Content-Length: 0
+Content-Type: text/html
+
+[2023-12-13 20:43:26] [DEBUG] Debug message: 42[2023-12-13 20:43:26] [DEBUG] Debug message: 42[2023-12-13 20:43:26] [DEBUG] Debug message: 42[2023-12-13 20:43:26] [INFO] ERROR HTTP/1.1 404
+Content-Length: 0
+Content-Type: text/html
+
+[2023-12-13 20:43:26] [INFO] ERROR HTTP/1.1 404
+Content-Length: 0
+Content-Type: text/html
+
+[2023-12-13 20:43:26] [DEBUG] Debug message: 42[2023-12-13 20:43:26] [DEBUG] Debug message: 42[2023-12-13 21:32:42] [INFO] Server listening on port 5600...
+[2023-12-13 21:34:48] [INFO] Server listening on port 5600...
+[2023-12-13 21:35:42] [INFO] Server listening on port 5600...
+[2023-12-13 21:37:06] [INFO] Server listening on port 5600...
+[2023-12-13 21:40:21] [INFO] Server listening on port 5600...
+[2023-12-13 21:43:25] [INFO] Server listening on port 5600...
+[2023-12-13 23:34:19] [INFO] Server listening on port 5600...
+[2023-12-13 23:34:22] [INFO] ERROR HTTP/1.1 403
+Content-Length: 0
+Content-Type: text/html
+
+[2023-12-13 23:34:22] [DEBUG] Debug message: 42[2023-12-14 00:34:48] [INFO] Server listening on port 5600...
+[2023-12-14 02:06:26] [INFO] Server listening on port 5600...
+[2023-12-14 04:52:24] [INFO] ERROR HTTP/1.1 404
+Content-Length: 0
+Content-Type: text/html
+
+[2023-12-14 04:52:24] [DEBUG] Debug message: 42[2023-12-14 06:18:28] [INFO] Server listening on port 5600...
+[2023-12-14 06:19:44] [INFO] Server listening on port 5600...
+[2023-12-14 15:21:32] [INFO] ERROR HTTP/1.1 404
+Content-Length: 0
+Content-Type: text/html
+
+[2023-12-14 15:21:32] [DEBUG] Debug message: 42
